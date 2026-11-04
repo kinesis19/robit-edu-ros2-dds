@@ -44,13 +44,17 @@ def main(argv=None):
 
     procs = {}
     lock = threading.Lock()
+    seen = {e['stage'] for e in core.read_ledger(name)}
 
     def pump(stage_key, p):
         for line in p.stdout:
             line = line.rstrip('\n')
             if line.startswith('@@CLEAR'):
                 n = int(line.split()[1])
-                if core.add_ledger(name, n):
+                with lock:
+                    added = core.add_ledger(name, n)
+                    seen.add(n)
+                if added:
                     print('\n★ %d단계 통과! 기록되었습니다.\n' % n, flush=True)
             elif line.strip():
                 print(line, flush=True)
@@ -107,6 +111,12 @@ def main(argv=None):
             mt = os.path.getmtime(env_path)
         except OSError:
             continue
+        # 다른 프로세스(check3 등)가 기록한 단계도 이 터미널에 알린다.
+        with lock:
+            new = [e['stage'] for e in core.read_ledger(name) if e['stage'] not in seen]
+            seen.update(new)
+        for n in new:
+            print('\n★ %d단계 통과! 기록되었습니다. (check 결과)\n' % n, flush=True)
         if mt != mtime:
             mtime = mt
             with lock:

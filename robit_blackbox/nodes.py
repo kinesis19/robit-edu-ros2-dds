@@ -59,7 +59,7 @@ def run(stage, cfg):
         cfg_pub = node.create_publisher(String, '/%s/config' % pfx, qos('reliable', 'transient_local', 1))
         stream = node.create_publisher(String, '/%s/stream' % pfx, qos('best_effort', 'volatile', 5))
         m = String()
-        m.data = ('BB2-A word=%s | 스트림은 /%s/stream | 두 값을 "A값-B값" 으로 이어 /%s/answer 로 보내라 '
+        m.data = ('BB2-A word=%s | 스트림은 /%s/stream | 각 메시지의 word= 뒤 값 두 개를 A-B 순서로 "-" 로 이어 /%s/answer 로 보내라 '
                   '(구독 노드가 켜져 있는 동안) | 다음 신호: 도메인 %d의 /%s/cmd'
                   % (sc['w'], pfx, pfx, sc['d4'], pfx))
         cfg_pub.publish(m)  # 한 번만 발행
@@ -92,7 +92,7 @@ def run(stage, cfg):
             if state['done']:
                 return
             if m.data.strip() != '%s-%s' % (sc['w'], sc['v']):
-                print('[2단계] 응답 값이 맞지 않습니다.', flush=True)
+                print('[2단계] 응답 값이 맞지 않습니다. 형식: config 의 word= 값, 하이픈, stream 의 word= 값.', flush=True)
                 return
             a = ok_endpoint('/%s/config' % pfx, want_dur=DurabilityPolicy.TRANSIENT_LOCAL)
             b = ok_endpoint('/%s/stream' % pfx, want_rel=ReliabilityPolicy.BEST_EFFORT)

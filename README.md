@@ -18,7 +18,7 @@ ROBIT 인턴 ROS 2 심화 교육(미들웨어/DDS) **Day 1 미션 과제**입니
 ```bash
 source /opt/ros/jazzy/setup.bash
 mkdir -p ~/ros2_ws/src && cd ~/ros2_ws/src
-git clone https://github.com/<GitHub 계정>/robit-edu-ros2-dds.git
+git clone https://github.com/kinesis19/robit-edu-ros2-dds.git
 cd ~/ros2_ws
 colcon build --packages-select robit_blackbox
 source install/setup.bash
@@ -90,8 +90,10 @@ ros2 run robit_blackbox report --name "홍길동"
 |---|---|
 | `Package 'robit_blackbox' not found` | `source ~/ros2_ws/install/setup.bash` 를 했는지 |
 | `rclpy 를 찾을 수 없습니다` | `source /opt/ros/jazzy/setup.bash` 를 했는지 |
+| `rclpy` 를 못 찾는 오류가 build 후에도 남음 | conda/venv 가 켜져 있으면 `conda deactivate` 후 새 터미널에서 다시 빌드 |
 | `colcon build` 실패 | `sudo apt install python3-colcon-common-extensions`, ROS를 source 한 상태인지 |
 | 로봇 신호가 안 보임 | 새 터미널의 `env | grep -E "ROS|RMW|CYCLONE"` 로 옛 설정이 남았는지, `ros2 daemon stop` |
+| `이미 실행 중입니다` | 같은 이름의 로봇이 다른 터미널에 떠 있습니다. 하나만 켜세요 |
 | 이름을 바꾸고 싶음 | 이름이 바뀌면 새 시나리오가 시작됩니다. 기존 이름으로 계속하세요 |
 | 3단계 통신 테스트 실패 | Cyclone 설치 여부 (`ros2 pkg prefix rmw_cyclonedds_cpp`), XML 문법, 방화벽 |
 

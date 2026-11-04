@@ -1,5 +1,6 @@
 """`ros2 run robit_blackbox robot --name <이름>`: 블랙박스 로봇을 켠다."""
 import argparse
+import fcntl
 import json
 import os
 import signal
@@ -37,6 +38,12 @@ def main(argv=None):
 
     sc = core.load_scenario(name)
     sdir = core.state_dir(name)
+    lock_f = open(os.path.join(sdir, 'robot.lock'), 'w')
+    try:
+        fcntl.flock(lock_f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        print('이름 "%s" 의 로봇이 이미 실행 중입니다. 다른 터미널의 로봇을 종료(Ctrl+C)한 뒤 다시 켜세요.' % name)
+        return 1
     env_path = os.path.join(sdir, 'listener.env')
     if not os.path.exists(env_path):
         with open(env_path, 'w', encoding='utf-8') as f:

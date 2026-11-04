@@ -12,7 +12,7 @@
 
 1. `ros2 topic info -v <토픽>` 에서 발행자의 **Reliability** 와 **Durability** 를 보세요.
 2. 3장 호환 규칙을 떠올리세요. 구독자가 요구하는 것을 발행자가 제공할 수 있어야 합니다. `ros2 topic echo` 는 값을 훑어보는 데 쓸 수 있지만, 판정은 **직접 만든 노드**만 인정합니다.
-3. rclpy 에서 `QoSProfile(reliability=..., durability=..., history=..., depth=...)` 를 만들어 `create_subscription` 의 마지막 인자로 넘기세요. config 토픽은 `transient_local`, stream 토픽은 `best_effort` 로 구독합니다. 노드는 해당 도메인(`ROS_DOMAIN_ID`)에서 실행해야 합니다.
+3. rclpy 에서 `QoSProfile(reliability=..., durability=..., history=..., depth=...)` 를 만들어 `create_subscription` 의 마지막 인자로 넘기세요. config 토픽은 `transient_local`, stream 토픽은 `best_effort` 로 구독합니다. 노드는 해당 도메인(`ROS_DOMAIN_ID`)에서 실행해야 합니다. 응답을 `ros2 topic pub` 으로 보낼 때는 1단계처럼 `-r` 이나 `-t` 로 구독자를 찾을 시간을 주세요.
 
 ## 3단계
 
